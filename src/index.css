@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html.light body, body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-emerald-500 selection:text-white;
+  }
+
+  html.dark body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white;
+  }
+
+  /* Global Light Mode & Dark Mode Select Option High-Contrast Overrides */
+  select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    padding: 8px !important;
+  }
+
+  html.dark select option {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+    padding: 8px !important;
+  }
+}
+
+/* Eco Friendly Glassmorphism & Card Utilities */
+.light .eco-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.05);
+}
+
+.dark .eco-card {
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 18s linear infinite;
+}
+
+/* Leaflet Map Theme Overrides */
+.light .leaflet-container {
+  background-color: #f8fafc !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.dark .leaflet-container {
+  background-color: #0f172a !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.light .leaflet-popup-content-wrapper {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid #d1fae5 !important;
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15) !important;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid #334155 !important;
+}
+
+.light .leaflet-popup-tip {
+  background-color: #ffffff !important;
+}
+
+.dark .leaflet-popup-tip {
+  background-color: #1e293b !important;
+}

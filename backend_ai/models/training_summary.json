@@ -1,0 +1,17 @@
+{
+  "status": "TRAINED",
+  "dataset_size_images": 600,
+  "classifier_accuracy_percent": 88.33,
+  "forecaster_r2_score_percent": 98.69,
+  "categories": [
+    "RECYCLE",
+    "RECOVER",
+    "DECOMPOSE",
+    "DISPOSE",
+    "REUSE"
+  ],
+  "models_saved": [
+    "C:\\Users\\SREERAJ GANTIMALL\\OneDrive\\Desktop\\Swarnandhra\\backend_ai\\models\\wasteloop_classifier.joblib",
+    "C:\\Users\\SREERAJ GANTIMALL\\OneDrive\\Desktop\\Swarnandhra\\backend_ai\\models\\wasteloop_forecaster.joblib"
+  ]
+}

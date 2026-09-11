@@ -1,0 +1,10 @@
+WasteLoop Treatment Dataset
+===========================
+
+Total images: 40
+
+Class distribution:
+RECYCLE: 10
+RECOVER: 10
+DECOMPOSE: 10
+DISPOSE: 10
