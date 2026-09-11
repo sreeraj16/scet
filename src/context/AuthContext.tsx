@@ -193,6 +193,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const googleLogin = async () => {
+    const redirectUrl = typeof window !== 'undefined' && window.location.origin 
+      ? window.location.origin 
+      : (import.meta.env.VITE_APP_URL || 'https://swarnandhra.vercel.app');
+
     try {
       if (isSupabaseConfigured()) {
         const { error } = await supabase.auth.signInWithOAuth({
@@ -202,7 +206,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               access_type: 'offline',
               prompt: 'consent',
             },
-            redirectTo: window.location.origin
+            redirectTo: redirectUrl
           }
         });
         if (error) console.warn('[Google OAuth] Supabase OAuth redirect notice:', error.message);
