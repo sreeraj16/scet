@@ -68,7 +68,7 @@ const MainAppLayout: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 flex flex-col font-sans selection:bg-emerald-500 selection:text-white ${
+    <div className={`min-h-screen w-full max-w-full overflow-x-hidden transition-colors duration-300 flex flex-col font-sans selection:bg-emerald-500 selection:text-white ${
       theme === 'light' ? 'bg-slate-50 text-slate-900' : 'bg-slate-950 text-slate-100'
     }`}>
       
@@ -82,13 +82,13 @@ const MainAppLayout: React.FC = () => {
       <MissedCollectionPromptModal />
 
       {/* Main App Content Area (Pushed right for desktop sidebar) */}
-      <div className="lg:pl-64 flex flex-col flex-1 min-h-screen">
+      <div className="lg:pl-64 flex flex-col flex-1 min-h-screen w-full max-w-full overflow-x-hidden">
         
         {/* Top Command Navigation Header */}
         <Header />
 
         {/* Dynamic Surface */}
-        <main className="flex-1 pb-12">
+        <main className="flex-1 pb-12 w-full max-w-full overflow-x-hidden">
           <ViewRouter />
         </main>
 

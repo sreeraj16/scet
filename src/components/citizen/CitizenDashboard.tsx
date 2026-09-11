@@ -41,7 +41,7 @@ export const CitizenDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       
       {/* Top Banner — Eco-Friendly Design */}
-      <div className={`p-6 sm:p-8 rounded-3xl shadow-xl space-y-6 border transition-colors duration-300 ${
+      <div className={`p-4 sm:p-6 lg:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6 border transition-colors duration-300 ${
         isLight 
           ? 'bg-white border-emerald-200 shadow-emerald-500/5 text-slate-900' 
           : 'bg-slate-900 border-slate-800 text-white'
@@ -51,29 +51,29 @@ export const CitizenDashboard: React.FC = () => {
         <div className="space-y-2 border-b pb-5 border-emerald-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-300 dark:border-emerald-400/30 inline-flex items-center">
-                <Leaf className="w-3.5 h-3.5 mr-1 text-emerald-600 dark:text-emerald-300" />
+              <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-300 dark:border-emerald-400/30 inline-flex items-center">
+                <Leaf className="w-3.5 h-3.5 mr-1 text-emerald-600 dark:text-emerald-300 shrink-0" />
                 Zero-Effort Eco Portal
               </span>
 
-              <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-50 dark:bg-slate-800 text-emerald-900 dark:text-slate-200 border border-emerald-200 dark:border-slate-700">
+              <span className="text-[10px] sm:text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-50 dark:bg-slate-800 text-emerald-900 dark:text-slate-200 border border-emerald-200 dark:border-slate-700 truncate max-w-full">
                 {activeOrg.name} ({activeOrg.type})
               </span>
             </div>
 
-            <h1 className={`text-3xl font-extrabold tracking-tight ${isLight ? 'text-emerald-950' : 'text-white'}`}>
+            <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight break-words ${isLight ? 'text-emerald-950' : 'text-white'}`}>
               Citizen Waste Intelligence
             </h1>
-            <p className={`text-xs font-semibold ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+            <p className={`text-xs font-semibold break-words ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
               📍 Home Address • Sector 1 • Zone 1
             </p>
           </div>
 
           <button
             onClick={() => setWizardOpen(true)}
-            className="flex items-center space-x-2 px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all"
+            className="flex items-center justify-center space-x-2 px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all w-full md:w-auto"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 shrink-0" />
             <span>Configure Recurring Schedule</span>
           </button>
         </div>

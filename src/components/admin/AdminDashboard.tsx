@@ -32,23 +32,23 @@ export const AdminDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       
       {/* Top Header & Tab Navigation Bar */}
-      <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-6 rounded-3xl shadow-xl transition-colors duration-300 border ${
+      <div className={`flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 sm:p-6 rounded-3xl shadow-xl transition-colors duration-300 border ${
         isLight 
           ? 'bg-white border-emerald-100 shadow-emerald-500/5' 
           : 'bg-slate-900 border-slate-800'
       }`}>
         <div>
-          <span className={`text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${
+          <span className={`text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border inline-block ${
             isLight ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
           }`}>
             Municipal Eco Operations & Circular Hub
           </span>
-          <h1 className={`text-2xl font-extrabold mt-2 tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>{activeOrg.name} Dashboard</h1>
-          <p className={`text-xs mt-1 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Multi-Tenant Isolation RLS Active • Production SaaS Interface</p>
+          <h1 className={`text-xl sm:text-2xl font-extrabold mt-2 tracking-tight break-words ${isLight ? 'text-slate-900' : 'text-white'}`}>{activeOrg.name} Dashboard</h1>
+          <p className={`text-xs mt-1 break-words ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Multi-Tenant Isolation RLS Active • Production SaaS Interface</p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 text-xs font-bold">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 text-xs font-bold">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-3.5 py-2.5 rounded-2xl transition flex items-center space-x-1.5 ${

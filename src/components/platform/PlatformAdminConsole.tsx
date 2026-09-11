@@ -25,21 +25,21 @@ export const PlatformAdminConsole: React.FC = () => {
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       
       {/* Header */}
-      <div className={`p-6 sm:p-8 rounded-3xl shadow-xl space-y-6 border transition-colors duration-300 ${
+      <div className={`p-4 sm:p-6 lg:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6 border transition-colors duration-300 ${
         isLight ? 'bg-white border-emerald-100 shadow-emerald-500/5 text-slate-900' : 'bg-slate-900 border-slate-800 text-white'
       }`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-cyan-400 bg-emerald-100 dark:bg-cyan-500/10 px-3 py-1 rounded-full border border-emerald-300">
+            <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-cyan-400 bg-emerald-100 dark:bg-cyan-500/10 px-3 py-1 rounded-full border border-emerald-300 inline-block">
               SaaS Platform Master Console
             </span>
-            <h1 className={`text-2xl font-extrabold mt-2 tracking-tight ${isLight ? 'text-emerald-950' : 'text-white'}`}>WasteLoop Multi-Tenant SaaS Engine</h1>
-            <p className={`text-xs mt-1 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Global Organization Onboarding & PostgreSQL RLS Tenant Security</p>
+            <h1 className={`text-xl sm:text-2xl font-extrabold mt-2 tracking-tight break-words ${isLight ? 'text-emerald-950' : 'text-white'}`}>WasteLoop Multi-Tenant SaaS Engine</h1>
+            <p className={`text-xs mt-1 break-words ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Global Organization Onboarding & PostgreSQL RLS Tenant Security</p>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs">
-            <span className="bg-emerald-100 text-emerald-900 font-extrabold px-3.5 py-1.5 rounded-full border border-emerald-300 flex items-center">
-              <Activity className="w-4 h-4 mr-1.5 text-emerald-600" />
+          <div className="flex items-center space-x-2 text-xs self-start md:self-auto shrink-0">
+            <span className="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1.5 rounded-full border border-emerald-300 flex items-center text-xs">
+              <Activity className="w-4 h-4 mr-1.5 text-emerald-600 shrink-0" />
               ALL SYSTEMS OPERATIONAL
             </span>
           </div>
