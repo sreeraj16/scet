@@ -27,6 +27,7 @@ import {
   Zone
 } from '../types';
 import { supabase } from '../lib/supabase';
+import { supabaseDb } from '../lib/supabaseDb';
 import { validateStageTransition, auditWeightDiscrepancy } from '../lib/traceabilityEngine';
 import { outboxEngine } from '../lib/outboxEngine';
 import { geospatialEngine } from '../lib/geospatialEngine';
@@ -262,6 +263,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(foundUser);
   }, [activeRole, activeOrg]);
 
+  // Initial Supabase Hydration & Seeding
+  useEffect(() => {
+    async function hydrateFromSupabase() {
+      try {
+        const [remoteCols, remoteBatches, remoteCollectors, remoteComplaints] = await Promise.all([
+          supabaseDb.fetchCollections(),
+          supabaseDb.fetchWasteBatches(),
+          supabaseDb.fetchCollectors(),
+          supabaseDb.fetchComplaints()
+        ]);
+
+        if (remoteCols && remoteCols.length > 0) {
+          setCollections(remoteCols);
+        } else if (remoteCols && remoteCols.length === 0) {
+          for (const c of INITIAL_COLLECTIONS) {
+            await supabaseDb.upsertCollection(c);
+          }
+        }
+
+        if (remoteBatches && remoteBatches.length > 0) {
+          setWasteBatches(remoteBatches);
+        } else if (remoteBatches && remoteBatches.length === 0) {
+          for (const b of INITIAL_WASTE_BATCHES) {
+            await supabaseDb.upsertWasteBatch(b);
+          }
+        }
+
+        if (remoteCollectors && remoteCollectors.length === 0) {
+          for (const col of INITIAL_COLLECTORS) {
+            await supabaseDb.upsertCollector(col);
+          }
+        }
+
+        if (remoteComplaints && remoteComplaints.length > 0) {
+          setComplaints(remoteComplaints);
+        } else if (remoteComplaints && remoteComplaints.length === 0) {
+          for (const cmp of INITIAL_COMPLAINTS) {
+            await supabaseDb.upsertComplaint(cmp);
+          }
+        }
+      } catch (err) {
+        console.warn('[AuthContext] Supabase hydration error:', err);
+      }
+    }
+
+    hydrateFromSupabase();
+  }, []);
+
   const logAudit = (action: string, entity_type: string, entity_id: string, details: string) => {
     const newEntry: AuditLog = {
       id: `aud-${Date.now()}`,
@@ -275,6 +324,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       timestamp: new Date().toISOString(),
     };
     setAuditLogs(prev => [newEntry, ...prev]);
+    supabaseDb.insertAuditLog(newEntry);
   };
 
   // Zero-Effort Auto Missed-Collection Trigger Check
@@ -309,6 +359,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setCollections(prev => [created, ...prev]);
+    supabaseDb.upsertCollection(created);
     logAudit('COLLECTION_REQUESTED', 'CollectionItem', created.id, `Created ${created.waste_category} collection request.`);
 
     // Dispatch Pickup Scheduled Email Notification
@@ -370,26 +421,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return item;
       }));
 
-      // Async DB Push to Supabase if connected
-      Promise.resolve(
-        supabase.from('material_batch_events').insert({
-          batch_id: b.id,
-          batch_code: b.batch_code,
-          event_type: event.event_type,
-          previous_status: event.previous_status || b.final_status,
-          new_status: event.new_status,
-          timestamp: nowStr,
-          organization_id: b.organization_id || activeOrg.id,
-          actor_name: event.actor_name,
-          actor_role: event.actor_role,
-          location_name: event.location_name,
-          latitude: event.latitude,
-          longitude: event.longitude,
-          weight_kg: event.weight_kg,
-          notes: event.notes,
-          weight_discrepancy_flag: weightAudit.hasDiscrepancy || false
-        })
-      ).catch(() => {});
+      // Async DB Push to Supabase via supabaseDb
+      supabaseDb.insertBatchEvent(newEv);
+      if (b) {
+        supabaseDb.upsertWasteBatch({
+          ...b,
+          final_status: event.new_status,
+          current_location_name: event.location_name || b.current_location_name,
+          current_latitude: event.latitude || b.current_latitude,
+          current_longitude: event.longitude || b.current_longitude,
+          current_responsible_entity: event.actor_name || b.current_responsible_entity,
+          last_updated_at: nowStr,
+        });
+      }
     };
 
     // Exported function for manual or automated batch stage transitions
@@ -424,14 +468,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Update collection status
     setCollections(prev => prev.map(c => {
       if (c.id === collectionId) {
-        return {
+        const updated = {
           ...c,
-          status: 'collected',
+          status: 'collected' as const,
           actual_weight_kg: actualWeightKg,
           segregation_verified: segregationVerified,
           evidence_image_url: evidenceUrl,
           updated_at: nowStr,
         };
+        supabaseDb.upsertCollection(updated);
+        return updated;
       }
       return c;
     }));
@@ -523,6 +569,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       events: [sourceEvent, collectedEvent, transitEvent]
     };
 
+    supabaseDb.upsertWasteBatch(newBatch);
+    supabaseDb.insertBatchEvent(sourceEvent);
+    supabaseDb.insertBatchEvent(collectedEvent);
+    supabaseDb.insertBatchEvent(transitEvent);
+
     // Publish Domain Event to Outbox Architecture
     outboxEngine.publish(
       'collection.completed',
@@ -594,6 +645,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setComplaints(prev => [newComplaint, ...prev]);
+    supabaseDb.upsertComplaint(newComplaint);
     logAudit('COMPLAINT_FILED', 'Complaint', ticketCode, `Filed complaint for ${category}`);
   };
 
@@ -660,7 +712,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           notes: `${dryKg} kg Dry Recyclables diverted to circular recovery stream.`
         };
 
-        return {
+        const updatedBatch: WasteBatch = {
           ...b,
           coarse_separation_status: 'completed',
           organic_fraction_kg: organicKg,
@@ -676,6 +728,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           recycler_name: dryKg > 0 ? 'CleanTech Materials & Plastics' : undefined,
           events: [...(b.events || []), segregationEv, recoveredEv]
         };
+
+        supabaseDb.upsertWasteBatch(updatedBatch);
+        supabaseDb.insertBatchEvent(segregationEv);
+        supabaseDb.insertBatchEvent(recoveredEv);
+
+        return updatedBatch;
       }
       return b;
     }));
@@ -733,7 +791,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             notes: 'Recycling process complete. Circular Certificate issued.'
           };
 
-          return {
+          const updatedBatch: WasteBatch = {
             ...b,
             final_status: 'RECYCLED',
             recycler_received_weight_kg: targetTx.weight_kg,
@@ -742,6 +800,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             last_updated_at: nowStr,
             events: [...(b.events || []), acceptEv, recycledEv]
           };
+
+          supabaseDb.upsertWasteBatch(updatedBatch);
+          supabaseDb.insertBatchEvent(acceptEv);
+          supabaseDb.insertBatchEvent(recycledEv);
+
+          return updatedBatch;
         }
         return b;
       }));
@@ -753,13 +817,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const reassignTask = (collectionId: string, collectorId: string, collectorName: string) => {
     setCollections(prev => prev.map(c => {
       if (c.id === collectionId) {
-        return {
+        const updated = {
           ...c,
           collector_id: collectorId,
           collector_name: collectorName,
-          status: 'collector_en_route',
+          status: 'collector_en_route' as const,
           updated_at: new Date().toISOString()
         };
+        supabaseDb.upsertCollection(updated);
+        return updated;
       }
       return c;
     }));

@@ -227,10 +227,16 @@ export const SupervisorConsole: React.FC = () => {
 
       {/* Task Reassignment Modal */}
       {reassignModalOpen && selectedTicket && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className={`border rounded-3xl max-w-md w-full p-6 shadow-2xl relative ${
-            isLight ? 'bg-white border-emerald-200 text-slate-900' : 'bg-slate-900 border-slate-700 text-white'
-          }`}>
+        <div 
+          onClick={() => setReassignModalOpen(false)}
+          className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className={`border rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto my-auto ${
+              isLight ? 'bg-white border-emerald-200 text-slate-900' : 'bg-slate-900 border-slate-700 text-white'
+            }`}
+          >
             <button
               onClick={() => setReassignModalOpen(false)}
               className={`absolute top-4 right-4 p-2 rounded-xl ${isLight ? 'text-slate-400 hover:text-slate-900 bg-slate-100' : 'text-slate-400 hover:text-white bg-slate-800'}`}

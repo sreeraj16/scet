@@ -27,17 +27,25 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ batch, isOpe
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className={`border-4 border-double border-emerald-500 rounded-3xl max-w-2xl w-full p-8 shadow-2xl relative transition-all ${
-        isLight ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'
-      }`}>
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className={`border-4 border-double border-emerald-500 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative transition-all max-h-[90vh] overflow-y-auto my-auto ${
+          isLight ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'
+        }`}
+      >
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 print:hidden"
+          className="absolute top-4 right-4 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 border border-slate-300 dark:border-slate-700 flex items-center space-x-1 print:hidden"
+          title="Close Certificate Window"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
+          <span>Close</span>
         </button>
 
         {/* Certificate Watermark Header */}

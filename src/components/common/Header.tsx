@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className={`sticky top-0 z-30 h-16 border-b transition-colors duration-300 w-full max-w-full overflow-hidden ${
+    <header className={`sticky top-0 z-30 h-16 border-b transition-colors duration-300 w-full max-w-full overflow-visible ${
       theme === 'light' 
         ? 'bg-white text-slate-900 border-slate-200 shadow-xs' 
         : 'bg-slate-900 text-slate-100 border-slate-800'
@@ -200,11 +200,22 @@ export const Header: React.FC = () => {
             </select>
           </div>
 
-          {/* User Profile Menu */}
+          {/* Quick Sign Out Button */}
+          <button
+            onClick={logout}
+            className="flex items-center space-x-1 px-2 py-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-extrabold transition shrink-0"
+            title="Sign Out of WasteLoop"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Sign Out</span>
+          </button>
+
+          {/* User Profile Menu Dropdown */}
           <div className="relative shrink-0">
             <button
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               className="flex items-center space-x-1 p-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
+              title="Profile Menu"
             >
               <img
                 src={currentUser.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
@@ -215,25 +226,31 @@ export const Header: React.FC = () => {
             </button>
 
             {profileDropdownOpen && (
-              <div className={`absolute right-0 mt-2 w-56 rounded-2xl border shadow-xl py-2 z-50 transition-all ${
-                theme === 'light' ? 'bg-white border-slate-200' : 'bg-slate-900 border-slate-800 text-white'
-              }`}>
-                <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800">
-                  <p className="text-xs font-bold truncate">{currentUser.full_name}</p>
-                  <p className="text-[10px] text-slate-400 capitalize">{activeRole.replace('_', ' ')} • {activeOrg.name}</p>
-                </div>
+              <>
+                <div 
+                  onClick={() => setProfileDropdownOpen(false)}
+                  className="fixed inset-0 z-40 bg-transparent"
+                />
+                <div className={`absolute right-0 mt-2 w-56 rounded-2xl border shadow-xl py-2 z-50 transition-all ${
+                  theme === 'light' ? 'bg-white border-slate-200' : 'bg-slate-900 border-slate-800 text-white'
+                }`}>
+                  <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800">
+                    <p className="text-xs font-bold truncate">{currentUser.full_name}</p>
+                    <p className="text-[10px] text-slate-400 capitalize">{activeRole.replace('_', ' ')} • {activeOrg.name}</p>
+                  </div>
 
-                <button
-                  onClick={() => {
-                    setProfileDropdownOpen(false);
-                    logout();
-                  }}
-                  className="w-full px-4 py-2 text-left text-xs font-semibold text-rose-500 hover:bg-rose-500/10 flex items-center"
-                >
-                  <LogOut className="w-3.5 h-3.5 mr-2" />
-                  Sign Out
-                </button>
-              </div>
+                  <button
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      logout();
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-xs font-bold text-rose-500 hover:bg-rose-500/10 flex items-center transition"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </button>
+                </div>
+              </>
             )}
           </div>
 

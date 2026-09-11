@@ -29,14 +29,18 @@ const ViewRouter: React.FC = () => {
   const { activeRole, activeNavView } = useAuth();
 
   // Sub-view explicit navigation routing from Sidebar
-  if (activeNavView === 'unified_live_map' || activeNavView === 'live_ops' || activeNavView === 'heatmaps') return <UnifiedLiveMap />;
+  if (activeNavView === 'live_ops') return <SupervisorConsole />;
+  if (activeNavView === 'unified_live_map' || activeNavView === 'heatmaps' || activeNavView === 'routes') return <UnifiedLiveMap />;
   if (activeNavView === 'event_outbox_monitor') return <EventOutboxMonitor />;
   if (activeNavView === 'system_health') return <SystemHealthConsole />;
   if (activeNavView === 'marketplace') return <MarketplaceModule />;
-  if (activeNavView === 'schedules') return <ScheduleManagementView />;
+  if (activeNavView === 'schedules' || activeNavView === 'collections') return <ScheduleManagementView />;
   if (activeNavView === 'ai_classification' || activeNavView === 'waste_guide') return <WasteDisposalGuide />;
   if (activeNavView === 'waste_journey' || activeNavView === 'traceability') return <WasteJourneyViewer />;
-  if (activeNavView === 'sustainability' || activeNavView === 'esg_reports') return <SustainabilityDashboard />;
+  if (activeNavView === 'sustainability' || activeNavView === 'esg_reports' || activeNavView === 'analytics' || activeNavView === 'forecasting') return <SustainabilityDashboard />;
+  if (activeNavView === 'fleet' || activeNavView === 'iot_devices' || activeNavView === 'collectors' || activeNavView === 'reports') return <SupervisorConsole />;
+  if (activeNavView === 'recovery' || activeNavView === 'recyclers') return <RecyclerDashboard />;
+  if (activeNavView === 'users' || activeNavView === 'organizations' || activeNavView === 'zones' || activeNavView === 'settings') return <PlatformAdminConsole />;
 
   // Default Role-based portal dashboards
   switch (activeRole) {

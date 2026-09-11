@@ -30,7 +30,8 @@ import {
   Cpu,
   Compass,
   Zap,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 
 interface NavItem {
@@ -46,7 +47,7 @@ interface NavGroup {
 }
 
 export const Sidebar: React.FC = () => {
-  const { activeRole, activeNavView, setActiveNavView, sidebarOpen, setSidebarOpen } = useAuth();
+  const { activeRole, activeNavView, setActiveNavView, sidebarOpen, setSidebarOpen, logout } = useAuth();
   const { theme } = useTheme();
 
   const navGroups: NavGroup[] = [
@@ -59,7 +60,7 @@ export const Sidebar: React.FC = () => {
     {
       title: 'OPERATIONS & GIS',
       items: [
-        { id: 'overview', label: 'Command Overview', icon: <LayoutDashboard className="w-4 h-4" />, rolesAllowed: ['citizen', 'collector', 'supervisor', 'admin', 'recycler', 'organization_admin', 'platform_admin'] },
+        { id: 'live_ops', label: 'Command Overview', icon: <LayoutDashboard className="w-4 h-4" />, rolesAllowed: ['citizen', 'collector', 'supervisor', 'admin', 'recycler', 'organization_admin', 'platform_admin'] },
         { id: 'unified_live_map', label: 'Unified GIS Map', icon: <Compass className="w-4 h-4" />, rolesAllowed: ['supervisor', 'admin', 'platform_admin', 'municipal_admin'] },
         { id: 'collections', label: 'Collection Schedule', icon: <Calendar className="w-4 h-4" />, rolesAllowed: ['citizen', 'collector', 'supervisor', 'admin'] },
         { id: 'fleet', label: 'Fleet Management', icon: <Truck className="w-4 h-4" />, rolesAllowed: ['supervisor', 'admin'] },
@@ -202,7 +203,7 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Role Identity Card Footer */}
-        <div className="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+        <div className="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 space-y-2">
           <div className="flex items-center space-x-3 p-2 rounded-xl border border-slate-200/60 dark:border-slate-800">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold text-xs">
               {activeRole.substring(0, 2).toUpperCase()}
@@ -215,6 +216,17 @@ export const Sidebar: React.FC = () => {
               </p>
             </div>
           </div>
+
+          <button
+            onClick={() => {
+              setSidebarOpen(false);
+              logout();
+            }}
+            className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-xs flex items-center justify-center space-x-2 border border-rose-500/20 transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
         </div>
 
       </aside>
